@@ -30,7 +30,7 @@ A full-featured blog and social platform built with Django. Users can register, 
 
 ## 📂 Project Structure
 
-
+https://github.com/Geenukabineth/nra_social_platform_demo/issues/2#issue-3174290151
 
 
 
