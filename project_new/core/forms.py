@@ -2,23 +2,15 @@ from .models import *
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
-from django import forms 
+from django import forms
+from django.contrib.auth.forms import UserCreationForm
 
 
-class SignupForm(forms.ModelForm):
-    password1 = forms.CharField(widget=forms.PasswordInput(attrs={"class": "form-control", "placeholder": "Password"}))
-    password2 = forms.CharField(
-        widget=forms.PasswordInput(attrs={"class": "form-control", "placeholder": "Confirm Password"})
-    )
-    terms = forms.BooleanField(required=True)
-
+class SignupForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ["username", "email"]
-        widgets = {
-            "username": forms.TextInput(attrs={"class": "form-control", "placeholder": "Username"}),
-            "email": forms.EmailInput(attrs={"class": "form-control", "placeholder": "Email"}),
-        }
+        fields = ["username",'first_name', "last_name","email",'password1','password2']
+
 
     def clean_username(self):
         username = self.cleaned_data.get("username")
@@ -43,12 +35,15 @@ class SignupForm(forms.ModelForm):
 
     def save(self, commit=True):
         user = super().save(commit=False)
-        user.password = self.cleaned_data["password1"]  
-        user.agreed_to_terms = self.cleaned_data["terms"]
+        user.password = self.cleaned_data["password1"]
         if commit:
             user.save()
         return user
 
+
+class LoginForm(forms.Form):
+    username = forms.CharField(max_length=40)
+    password = forms.CharField(max_length=40, widget=forms.PasswordInput)
 
 
 class EventForm(forms.ModelForm):
@@ -57,20 +52,24 @@ class EventForm(forms.ModelForm):
         fields = ["title", "description",'start_date', 'end_date',"location"]
         widgets = {
             "title": forms.TextInput(attrs={"class": "form-control", "placeholder": "Event Title"}),
-            "description": forms.Textarea(attrs={"class": "form-control", "placeholder": "Event Description"}),
-            'start_date': forms.DateInput(attrs={'type': 'date'}),
-            'end_date': forms.DateInput(attrs={'type': 'date'}),
+            "description": forms.Textarea(attrs={"class": "form-label", "placeholder": "Event Description"}),
+            "start_date": forms.DateInput(attrs={"type": "date"}),
+            "end_date": forms.DateInput(attrs={"type": "date"}),
             "location": forms.TextInput(attrs={"class": "form-control", "placeholder": "Event Location"}),
         }
+
 
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = ['name', 'price', 'category', 'description', 'image']
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-admin-primary focus:border-transparent'}),
-            'price': forms.NumberInput(attrs={'class': 'p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-admin-primary focus:border-transparent', 'step': '0.01'}),
-            'category': forms.Select(attrs={'class': 'p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-admin-primary focus:border-transparent'}),
-            'description': forms.Textarea(attrs={'class': 'p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-admin-primary focus:border-transparent resize-vertical min-h-24'}),
-            'image': forms.FileInput(attrs={'class': 'p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-admin-primary focus:border-transparent'}),
+            'name': forms.TextInput(attrs={'class': 'form-input', 'required': True}),
+            'price': forms.NumberInput(attrs={'class': 'form-input', 'step': '0.01', 'required': True}),
+            'category': forms.Select(attrs={'class': 'form-select'}),
+            'description': forms.Textarea(attrs={'class': 'form-textarea', 'placeholder': 'Enter product description...'}),
+            'image': forms.FileInput(attrs={'class': 'form-file', 'accept': 'image/*'}),
         }
+
+
+
