@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .auth-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .auth-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .auth-header h2 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-weight: 700;
+            position: relative;
+            padding-bottom: 15px;
+            display: inline-block;
+        }
+        
+        .auth-header h2:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 25%;
+            width: 50%;
+            height: 4px;
+            background: linear-gradient(to right, #3498db, #2ecc71);
+            border-radius: 2px;
+        }
+        
+        .auth-subtitle {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .signup_view .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .signup_view label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .signup_view input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            box-sizing: border-box;
+        }
+        
+        .signup_view input:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        .help-text {
+            color: #7f8c8d;
+            font-size: 0.85rem;
+            margin-top: 5px;
+            background-color: #f8f9fa;
+            padding: 8px;
+            border-radius: 4px;
+            border-left: 3px solid #3498db;
+        }
+        
+        .field-error, .errorlist {
+            color: #e74c3c;
+            font-size: 0.85rem;
+            margin-top: 5px;
+            background-color: rgba(231, 76, 60, 0.1);
+            padding: 8px;
+            border-radius: 4px;
+            border-left: 3px solid #e74c3c;
+        }
+        
+        .errorlist {
+            list-style: none;
+            padding-left: 8px;
+            margin: 0 0 10px 0;
+        }
+        
+        .errorlist li {
+            margin: 0;
+            padding: 2px 0;
+        }
+        
+        .form-field {
+            margin-bottom: 20px;
+        }
+        
+        .terms-agreement {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .terms-agreement input {
+            width: auto;
+            margin-right: 10px;
+            margin-top: 3px;
+        }
+        
+        .terms-agreement a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        
+        .terms-agreement a:hover {
+            text-decoration: underline;
+        }
+        
+        .auth-button {
+            width: 100%;
+            background: linear-gradient(to right, #3498db, #2ecc71);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+        
+        .auth-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+        }
+        
+        .auth-button:active {
+            transform: translateY(1px);
+        }
+        
+        .auth-footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .auth-footer a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        
+        .auth-footer a:hover {
+            color: #2980b9;
+            text-decoration: underline;
+        }
+
+        /* Base styles that would be in base.html */
+        .header {
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 15px 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Demo form styles */
+        .demo-form-field {
+            margin-bottom: 20px;
+        }
+        
+        .demo-form-field label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .demo-form-field input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            box-sizing: border-box;
+        }
+        
+        .demo-form-field input:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .auth-card {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .auth-container {
+                min-height: 100vh;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h2>Create an Account</h2>
+                <p class="auth-subtitle">Join our community and start blogging today</p>
+            </div>
+            
+            <form method="post" class="signup_view">
+               {% csrf_token %}             
+                
+               <div class="demo-form-field">
+                <label for="username">first name</label>
+                <input type="text" id="first_name" name="first_name" required>
+                
+            </div>
+            <div class="demo-form-field">
+                <label for="username">last name</label>
+                <input type="text" id="last_name" name="last_name" required>
+                
+            </div>
+                <div class="demo-form-field">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                    
+                </div>
+                
+                <div class="demo-form-field">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                
+                
+                
+                <div class="demo-form-field">
+                    <label for="password1">Password</label>
+                    <input type="password" id="password1" name="password1" required>
+                    
+                </div>
+                
+                <div class="demo-form-field">
+                    <label for="password2">Password Confirmation</label>
+                    <input type="password" id="password2" name="password2" required>
+                    <div class="help-text">Enter the same password as before, for verification.</div>
+                </div>
+                
+                <button type="submit" class="auth-button">Register</button>
+            </form>
+            
+            <div class="auth-footer">
+                <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
+                <!-- Replace # with Django URL: {% url 'login' %} -->
+            </div>
+        </div>
+    </div>
+</body>
+</html>

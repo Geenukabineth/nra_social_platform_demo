@@ -1,0 +1,482 @@
+{% block head %}
+  <title>Django Admin Dashboard</title>
+  <style>
+    :root {
+      --admin-primary: #417690;
+      --admin-header: #79aec8;
+      --admin-success: #28a745;
+      --admin-danger: #dc3545;
+      --admin-warning: #ffc107;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      color: #333;
+      background-color: #f8f9fa;
+    }
+    
+    /* Header */
+    .admin-header {
+      background-color: var(--admin-header);
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 1px 6px -1px rgba(0, 0, 0, 0.1);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      height: 4rem;
+      box-sizing: border-box;
+    }
+      
+    .admin-header h1 {
+      font-size: 1.25rem;
+      font-weight: 300;
+      margin: 0;
+    }
+    
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .logout-btn {
+      background-color: rgba(255, 255, 255, 0.2);
+      padding: 0.25rem 0.75rem;
+      border-radius: 0.25rem;
+      font-size: 0.875rem;
+      transition: background-color 0.2s;
+      text-decoration: none;
+      color: white;
+    }
+    
+    .logout-btn:hover {
+      background-color: rgba(255, 255, 255, 0.3);
+    }
+    
+    /* Sidebar */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 4rem;
+      width: 16rem;
+      height: calc(100vh - 4rem);
+      background-color: white;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      overflow-y: auto;
+      z-index: 40;
+    }
+    
+    .sidebar ul {
+      padding: 1rem 0;
+      margin: 0;
+      list-style: none;
+    }
+    
+    .sidebar li {
+      border-bottom: 1px solid #e5e7eb;
+    }
+    
+    .sidebar-link {
+      display: block;
+      padding: 0.75rem 1.5rem;
+      color: #374151;
+      transition: all 0.2s;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    
+    .sidebar-link:hover {
+      background-color: #f9fafb;
+      color: var(--admin-primary);
+    }
+    
+    .sidebar-link.active {
+      background-color: #f3f4f6;
+      color: var(--admin-primary);
+      border-right: 3px solid var(--admin-primary);
+    }
+    
+    /* Main Content */
+    .main-content {
+      margin-left: 16rem;
+      padding: 6rem 2rem 2rem;
+      min-height: 100vh;
+    }
+    
+    /* Dashboard */
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--admin-primary);
+      margin-bottom: 0.5rem;
+    }
+    
+    .breadcrumbs {
+      color: #6b7280;
+      font-size: 0.875rem;
+      margin-bottom: 2rem;
+    }
+    
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .stat-card {
+      background-color: white;
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      transition: box-shadow 0.2s;
+      border-left: 4px solid var(--admin-primary);
+    }
+    
+    .stat-card:hover {
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .stat-card.success {
+      border-left-color: var(--admin-success);
+    }
+    
+    .stat-card.warning {
+      border-left-color: var(--admin-warning);
+    }
+    
+    .stat-card.danger {
+      border-left-color: var(--admin-danger);
+    }
+    
+    .stat-value {
+      font-size: 1.875rem;
+      font-weight: 600;
+      color: #1f2937;
+      margin: 0 0 0.5rem 0;
+    }
+    
+    .stat-label {
+      color: #6b7280;
+      font-size: 0.875rem;
+      margin: 0;
+    }
+    
+    /* Tables */
+    .card {
+      background-color: white;
+      border-radius: 0.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+    
+    .card-header {
+      background-color: #f9fafb;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    
+    .card-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: #1f2937;
+      margin: 0;
+    }
+    
+    .table-container {
+      overflow-x: auto;
+    }
+    
+    .table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+    
+    .table thead {
+      background-color: #f9fafb;
+    }
+    
+    .table th {
+      padding: 0.75rem 1.5rem;
+      text-align: left;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .table td {
+      padding: 1rem 1.5rem;
+      font-size: 0.875rem;
+      color: #374151;
+      border-top: 1px solid #e5e7eb;
+    }
+    
+    .status-badge {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border-radius: 9999px;
+      display: inline-flex;
+    }
+    
+    .status-active {
+      background-color: #dcfce7;
+      color: #166534;
+    }
+    
+    .status-inactive {
+      background-color: #fee2e2;
+      color: #991b1b;
+    }
+    
+    /* Activity Feed */
+    .activity-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem;
+      background-color: #f9fafb;
+      border-radius: 0.375rem;
+    }
+    
+    .activity-time {
+      font-size: 0.875rem;
+      color: #6b7280;
+    }
+    
+    /* Utility Classes */
+    .hidden {
+      display: none;
+    }
+    
+    .text-center {
+      text-align: center;
+    }
+    
+    .py-4 {
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+    }
+    
+    .mb-8 {
+      margin-bottom: 2rem;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+      }
+      
+      .sidebar.open {
+        transform: translateX(0);
+      }
+      
+      .main-content {
+        margin-left: 0;
+        padding: 6rem 1rem 2rem;
+      }
+      
+      .admin-header {
+        padding: 1rem;
+      }
+      
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <!-- Header -->
+  <header class="admin-header">
+    <h1>Django Administration</h1>
+    <div class="header-actions">
+      {% if user.is_authenticated %}
+        <span>Welcome, {{ user.username }}</span>
+        <a href="{% url 'admin:logout' %}" class="logout-btn">Logout</a>
+      {% endif %}
+    </div>
+  </header>
+
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <ul id="sidebar">
+      <li>
+        <a href="#" onclick="showSection('dashboard', this)" class="sidebar-link active">
+          Dashboard
+        </a>
+      </li>
+      <li>
+        <a href="#" onclick="showSection('products', this)" class="sidebar-link">
+          Products
+        </a>
+      </li>
+      <li>
+        <a href="#" onclick="showSection('payments', this)" class="sidebar-link">
+          Payments
+        </a>
+      </li>
+      <li>
+        <a href="#" onclick="showSection('userdata', this)" class="sidebar-link">
+          User Data
+        </a>
+      </li>
+      <li>
+        <a href="#" onclick="showSection('event', this)" class="sidebar-link">
+          Events
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Dashboard Section -->
+    <div id="dashboard" class="section">
+      <div class="mb-8">
+        <h2 class="section-title">Dashboard</h2>
+        <div class="breadcrumbs">Home › Dashboard</div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h3 class="stat-value">{{ total_users|default:"0" }}</h3>
+          <p class="stat-label">Total Users</p>
+        </div>
+        <div class="stat-card success">
+          <h3 class="stat-value">{{ total_products|default:"0" }}</h3>
+          <p class="stat-label">Products</p>
+        </div>
+        <div class="stat-card warning">
+          <h3 class="stat-value">${{ total_revenue|default:"0" }}</h3>
+          <p class="stat-label">Total Revenue</p>
+        </div>
+        <div class="stat-card danger">
+          <h3 class="stat-value">{{ total_events|default:"0" }}</h3>
+          <p class="stat-label">Total Events</p>
+        </div>
+      </div>
+
+      <!-- User Management Table -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">User Management</h3>
+        </div>
+        <div class="table-container">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Date Joined</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% if user.is_authenticated %}
+              <tr>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email|default:"N/A" }}</td>
+                <td>
+                  <span class="status-badge {% if user.is_active %}status-active{% else %}status-inactive{% endif %}">
+                    {% if user.is_active %}Active{% else %}Inactive{% endif %}
+                  </span>
+                </td>
+                <td>{{ user.date_joined|date:"M d, Y"|default:"N/A" }}</td>
+              </tr>
+              {% else %}
+              <tr>
+                <td colspan="4" class="text-center py-4">No user data available</td>
+              </tr>
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Recent Activity</h3>
+        </div>
+        <div style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
+          {% for activity in recent_activities %}
+          <div class="activity-item">
+            <span>{{ activity.message }}</span>
+            <span class="activity-time">{{ activity.timestamp|timesince }} ago</span>
+          </div>
+          {% empty %}
+          <div class="text-center py-4">No recent activity</div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <div id="products" class="section hidden">
+      
+      {% include "components/Product.html" %}
+    </div>
+
+    <div id="payments" class="section hidden">
+      {% include "components/payment_view.html" %}
+    </div>
+
+    <div id="userdata" class="section hidden">
+      
+      {% include "components/Users_Data.html" %}
+    </div>
+
+    <div id="event" class="section hidden">
+      {% include "components/Event.html" %}
+    </div>
+  </main>
+
+  <script>
+    function showSection(sectionId, linkElement) {
+      
+      document.querySelectorAll('.section').forEach(section => {
+        section.classList.add('hidden');
+      });
+
+      const targetSection = document.getElementById(sectionId);
+      if (targetSection) {
+        targetSection.classList.remove('hidden');
+      }
+
+      document.querySelectorAll(".sidebar-link").forEach(link => {
+        link.classList.remove("active");
+      });
+
+      if (linkElement) {
+        linkElement.classList.add("active");
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const activeLink = document.querySelector('.sidebar-link.active');
+      if (activeLink) {
+        showSection('dashboard', activeLink);
+      }
+    });
+
+    function toggleSidebar() {
+      const sidebar = document.querySelector('.sidebar');
+      sidebar.classList.toggle('open');
+    }
+  </script>
+{% endblock %}

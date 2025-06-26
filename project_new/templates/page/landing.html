@@ -1,0 +1,238 @@
+<!-- page/landing.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to NRA Connect - Internal Professional Network</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'nra-blue': '#1f4e79',
+                        'nra-gold': '#c8aa6e',
+                        'nra-dark': '#2c3e50',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <i class="fas fa-bullseye text-nra-blue text-2xl mr-3"></i>
+                        <span class="font-bold text-2xl text-nra-blue">NRA Connect</span>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    
+                        <a href="{% url "login" %}" class="text-gray-700 hover:text-nra-blue transition-colors">
+                            Sign In
+                        </a>
+                        <a href="{% url "register" %}" class="bg-nra-blue text-white px-4 py-2 rounded-lg hover:bg-nra-dark transition-colors">
+                            Join Network
+                        </a>
+                   
+                </div>
+            </div>
+        </div>
+    </nav>
+
+   
+    <div class="relative bg-gradient-to-br from-nra-blue to-nra-dark overflow-hidden">
+        <div class="absolute inset-0 bg-black opacity-20"></div>
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+            <div class="text-center">
+                <h1 class="text-4xl md:text-6xl font-bold text-white mb-6">
+                    Connect. Share. Grow.
+                </h1>
+                <p class="text-xl md:text-2xl text-gray-200 mb-8 max-w-3xl mx-auto">
+                    The exclusive professional network for National Rifle Association members and staff. 
+                    Build meaningful connections within our community.
+                </p>
+                {% if not user.is_authenticated %}
+                <div class="space-x-4">
+                    <a href="{% url "register" %}" class="bg-nra-gold text-nra-dark px-8 py-4 rounded-lg text-lg font-semibold hover:bg-yellow-400 transition-colors inline-block">
+                        Join the Network
+                    </a>
+                    <a href="{% url "login" %}" class="border-2 border-white text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-white hover:text-nra-blue transition-colors inline-block">
+                        Sign In
+                    </a>
+                </div>
+                {% else %}
+                <div class="text-center">
+                    <p class="text-xl text-nra-gold mb-6">Welcome back, {{ user.first_name|default:user.username }}!</p>
+                    <a href="/dashboard/" class="bg-nra-gold text-nra-dark px-8 py-4 rounded-lg text-lg font-semibold hover:bg-yellow-400 transition-colors inline-block">
+                        Go to Dashboard
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+  
+    <div class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                    Built for Our Community
+                </h2>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                    Connect with fellow NRA members, share insights, and build professional relationships within our organization.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+      
+                <div class="text-center p-8 rounded-xl bg-gray-50 hover:shadow-lg transition-shadow">
+                    <div class="bg-nra-blue text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-users text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Professional Networking</h3>
+                    <p class="text-gray-600">
+                        Connect with colleagues across departments and regions. Build meaningful professional relationships within the NRA community.
+                    </p>
+                </div>
+                
+           
+                <div class="text-center p-8 rounded-xl bg-gray-50 hover:shadow-lg transition-shadow">
+                    <div class="bg-nra-blue text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-share-alt text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Knowledge Sharing</h3>
+                    <p class="text-gray-600">
+                        Share insights, best practices, and updates with your network. Learn from experienced professionals in our organization.
+                    </p>
+                </div>
+                
+                <!-- Feature 3 -->
+                <div class="text-center p-8 rounded-xl bg-gray-50 hover:shadow-lg transition-shadow">
+                    <div class="bg-nra-blue text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-shield-alt text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Secure & Private</h3>
+                    <p class="text-gray-600">
+                        Your data is protected within our secure internal network. Only verified NRA members and staff have access.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+ 
+    <div class="py-20 bg-nra-blue">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
+                    Growing Our Community
+                </h2>
+                <p class="text-xl text-gray-200">
+                    Join thousands of NRA professionals already connected
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-4 gap-8 text-center">
+                <div>
+                    <div class="text-4xl md:text-5xl font-bold text-nra-gold mb-2">5,000+</div>
+                    <div class="text-white text-lg">Active Members</div>
+                </div>
+                <div>
+                    <div class="text-4xl md:text-5xl font-bold text-nra-gold mb-2">50+</div>
+                    <div class="text-white text-lg">Departments</div>
+                </div>
+                <div>
+                    <div class="text-4xl md:text-5xl font-bold text-nra-gold mb-2">25,000+</div>
+                    <div class="text-white text-lg">Posts Shared</div>
+                </div>
+                <div>
+                    <div class="text-4xl md:text-5xl font-bold text-nra-gold mb-2">100+</div>
+                    <div class="text-white text-lg">Locations</div>
+                </div>
+            </div>
+        </div>
+    </div>  
+
+   
+    {% if not user.is_authenticated %}
+    <div class="py-20 bg-gray-900">
+        <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">
+                Ready to Connect?
+            </h2>
+            <p class="text-xl text-gray-300 mb-8">
+                Join NRA Connect today and start building meaningful professional relationships within our community.
+            </p>
+            <div class="space-x-4">
+                <a href="{% url "register" %}" class="bg-nra-gold text-nra-dark px-8 py-4 rounded-lg text-lg font-semibold hover:bg-yellow-400 transition-colors inline-block">
+                    Create Account
+                </a>
+                <a href="#features" class="border-2 border-gray-400 text-gray-300 px-8 py-4 rounded-lg text-lg font-semibold hover:border-white hover:text-white transition-colors inline-block">
+                    Learn More
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div class="md:col-span-2">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-bullseye text-nra-gold text-2xl mr-3"></i>
+                        <span class="font-bold text-2xl">NRA Connect</span>
+                    </div>
+                    <p class="text-gray-300 mb-4">
+                        The official internal professional network for National Rifle Association members and staff.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-nra-gold transition-colors">
+                            <i class="fab fa-facebook text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-nra-gold transition-colors">
+                            <i class="fab fa-twitter text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-nra-gold transition-colors">
+                            <i class="fab fa-linkedin text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="font-semibold text-lg mb-4">Quick Links</h3>
+                    <ul class="space-y-2 text-gray-300">
+                        <li><a href="/about/" class="hover:text-nra-gold transition-colors">About</a></li>
+                        <li><a href="/help/" class="hover:text-nra-gold transition-colors">Help Center</a></li>
+                        <li><a href="/privacy/" class="hover:text-nra-gold transition-colors">Privacy Policy</a></li>
+                        <li><a href="/terms/" class="hover:text-nra-gold transition-colors">Terms of Service</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="font-semibold text-lg mb-4">Support</h3>
+                    <ul class="space-y-2 text-gray-300">
+                        <li><a href="/contact/" class="hover:text-nra-gold transition-colors">Contact Us</a></li>
+                        <li><a href="/feedback/" class="hover:text-nra-gold transition-colors">Feedback</a></li>
+                        <li><a href="#" class="hover:text-nra-gold transition-colors">Technical Support</a></li>
+                        <li><a href="#" class="hover:text-nra-gold transition-colors">Community Guidelines</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 National Rifle Association. All rights reserved. </p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

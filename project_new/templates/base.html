@@ -1,0 +1,881 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}NRA Internal Network{% endblock %}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f9fafb;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: white;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .header-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 4rem;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 2rem;
+            height: 2rem;
+            background-color: #dc2626;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.875rem;
+        }
+
+        .header-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #111827;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+        .search-input {
+            padding-left: 2.5rem;
+            padding-right: 1rem;
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .search-input:focus {
+            ring: 2px solid #dc2626;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+        }
+
+        .notification-btn {
+            position: relative;
+            padding: 0.5rem;
+            color: #6b7280;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .notification-btn:hover {
+            color: #111827;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -0.25rem;
+            right: -0.25rem;
+            background-color: #dc2626;
+            color: white;
+            font-size: 0.75rem;
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .settings-btn {
+            padding: 0.5rem;
+            color: #6b7280;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .settings-btn:hover {
+            color: #111827;
+        }
+
+        .avatar {
+            width: 2rem;
+            height: 2rem;
+            background-color: #d1d5db;
+            border-radius: 50%;
+        }
+
+        .main-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 1024px) {
+            .grid {
+                grid-template-columns: 1fr 2fr 1fr;
+            }
+        }
+
+        .card {
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 1rem;
+        }
+
+        .nav-button {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            text-align: left;
+            color: #6b7280;
+            transition: all 0.2s;
+        }
+
+        .nav-button:hover {
+            background-color: #f9fafb;
+        }
+
+        .nav-button.active {
+            background-color: #fef2f2;
+            color: #dc2626;
+        }
+
+        .nav-space {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .dept-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+            transition: background-color 0.2s;
+        }
+
+        .dept-item:hover {
+            background-color: #f9fafb;
+        }
+
+        .dept-left {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .dept-count {
+            font-size: 0.75rem;
+            background-color: #f3f4f6;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+        }
+
+        .section-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 0.75rem;
+        }
+
+        .tab-content {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .tab-content.hidden {
+            display: none;
+        }
+
+        .post-creator {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .post-avatar {
+            width: 2.5rem;
+            height: 2.5rem;
+            background-color: #d1d5db;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .post-input-area {
+            flex: 1;
+        }
+
+        .post-textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            resize: none;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .post-textarea:focus {
+            ring: 2px solid #dc2626;
+        }
+
+        .post-actions {
+            margin-top: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .post-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .post-btn {
+            padding: 0.25rem 0.75rem;
+            font-size: 0.875rem;
+            color: #6b7280;
+            background: none;
+            border: none;
+            border-radius: 0.25rem;
+            cursor: pointer;
+        }
+
+        .post-btn:hover {
+            background-color: #f3f4f6;
+        }
+
+        .post-submit {
+            padding: 0.5rem 1rem;
+            background-color: #dc2626;
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .post-submit:hover {
+            background-color: #b91c1c;
+        }
+
+        .post-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .post {
+            border-bottom: 1px solid #f3f4f6;
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .post:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .post-user-avatar {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .post-user-info h4 {
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .post-user-info p {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .post-content {
+            color: #374151;
+            margin-bottom: 0.75rem;
+            line-height: 1.6;
+        }
+
+        .post-interactions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .interaction-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: inherit;
+            transition: color 0.2s;
+        }
+
+        .interaction-btn:hover {
+            color: #2563eb;
+        }
+
+        .event-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .event-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .event-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            transition: box-shadow 0.2s;
+        }
+
+        .event-card:hover {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .event-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .event-indicator {
+            width: 0.75rem;
+            height: 0.75rem;
+            border-radius: 50%;
+        }
+
+        .event-title {
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .event-date {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .event-description {
+            color: #374151;
+            margin-top: 0.5rem;
+        }
+
+        .event-location {
+            color: #374151;
+            margin-top: 0.5rem;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .product-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .product-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            transition: box-shadow 0.2s;
+        }
+
+        .product-card:hover {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 8rem;
+            background-color: #f3f4f6;
+            border-radius: 0.5rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9ca3af;
+            font-size: 2rem;
+        }
+
+        .product-name {
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .product-description {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-top: 0.25rem;
+        }
+
+        .product-footer {
+            margin-top: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .product-price {
+            color: #374151;
+            font-weight: 600;
+        }
+
+        .product-status {
+            display: inline-block;
+            background-color: #dcfce7;
+            color: #166534;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+        }
+
+        .stats-item {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .stats-label {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .stats-value {
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .stats-space {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .icon {
+            width: 1rem;
+            height: 1rem;
+            display: inline-block;
+        }
+
+        .icon-lg {
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+
+        .alert {
+            padding: 0.75rem 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid transparent;
+            border-radius: 0.5rem;
+        }
+
+        .alert-success {
+            color: #065f46;
+            background-color: #d1fae5;
+            border-color: #a7f3d0;
+        }
+
+        .alert-error {
+            color: #991b1b;
+            background-color: #fee2e2;
+            border-color: #fecaca;
+        }
+
+        .alert-warning {
+            color: #92400e;
+            background-color: #fef3c7;
+            border-color: #fde68a;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <div class="logo">
+                    <div class="logo-icon">NRA</div>
+                    <h1 class="header-title">Internal Network</h1>
+                </div>
+                <div class="flex items-center gap-4">
+                    {% if user.is_authenticated %}
+                      <span>Welcome, {{ request.user.username }}</span>
+                      <a href="{% url 'logout' %}" class="bg-white bg-opacity-20 hover:bg-opacity-30 px-3 py-1 rounded text-sm transition-colors">Logout</a>
+                    {% endif %}
+                  </div>
+            </div>
+
+            <div class="header-right">
+                <div class="search-container">
+                    <span class="search-icon">🔍</span>
+                    <input
+                        type="text"
+                        placeholder="Search members, posts..."
+                        class="search-input"
+                        name="search"
+                    />
+                </div>
+                <button class="notification-btn">
+                    <span class="icon-lg">🔔</span>
+                    {% if notifications_count %}
+                        <span class="notification-badge">{{ notifications_count }}</span>
+                    {% endif %}
+                </button>
+                <a href="" class="settings-btn">
+                    <span class="icon-lg">⚙️</span>
+                </a>
+                <div class="avatar">
+                    {% if user.profile_picture %}
+                        <img src="" alt="Profile" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="grid">
+            <div class="sidebar">
+                <div class="card">
+                    <nav class="nav-space">
+                        <button
+                            onclick="setActiveTab('feed')"
+                            id="nav-feed"
+                            class="nav-button active"
+                        >
+                            <span class="icon">💬</span>
+                            <span>Activity Feed</span>
+                        </button>
+
+                        <button
+                            onclick="setActiveTab('events')"
+                            id="nav-events"
+                            class="nav-button"
+                        >
+                            <span class="icon">📅</span>
+                            <span>Events</span>
+                        </button>
+                        <button
+                            onclick="setActiveTab('product')"
+                            id="nav-product"
+                            class="nav-button"
+                        >
+                            <span class="icon">📦</span>
+                            <span>Products</span>
+                        </button>
+                    </nav>
+                </div>
+
+                <div class="card" style="margin-top: 1.5rem;">
+                    <h3 class="section-title">Departments</h3>
+                    <div class="nav-space">
+                        {% for department in departments %}
+                        <div class="dept-item">
+                            <div class="dept-left">
+                                <span class="icon">{{ department.icon }}</span>
+                                <span style="font-size: 0.875rem; color: #374151;">{{ department.name }}</span>
+                            </div>
+                            <span class="dept-count">{{ department.member_count }}</span>
+                        </div>
+                        {% empty %}
+                        <div class="dept-item">
+                            <div class="dept-left">
+                                <span class="icon">🎯</span>
+                                <span style="font-size: 0.875rem; color: #374151;">Training</span>
+                            </div>
+                            <span class="dept-count">45</span>
+                        </div>
+                        <div class="dept-item">
+                            <div class="dept-left">
+                                <span class="icon">🛡️</span>
+                                <span style="font-size: 0.875rem; color: #374151;">Safety</span>
+                            </div>
+                            <span class="dept-count">32</span>
+                        </div>
+                        <div class="dept-item">
+                            <div class="dept-left">
+                                <span class="icon">📅</span>
+                                <span style="font-size: 0.875rem; color: #374151;">Events</span>
+                            </div>
+                            <span class="dept-count">28</span>
+                        </div>
+                        <div class="dept-item">
+                            <div class="dept-left">
+                                <span class="icon">📚</span>
+                                <span style="font-size: 0.875rem; color: #374151;">Education</span>
+                            </div>
+                            <span class="dept-count">19</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="main-content">
+                <div id="content-feed" class="tab-content">
+ 
+                    <div class="card">
+                        <form method="post" action="">
+                            {% csrf_token %}
+                            <div class="post-creator">                                
+                                <div class="post-input-area">
+                                    <textarea
+                                        name="content"
+                                        placeholder="Share an update with your colleagues..."
+                                        class="post-textarea"
+                                        rows="3"
+                                        required
+                                    ></textarea>
+                                    <div class="post-actions">
+                                        <div class="post-buttons">
+                                            <button type="button" class="post-btn">📷 Photo</button>
+                                            <button type="button" class="post-btn">📄 Document</button>
+                                        </div>
+                                        <button type="submit" class="post-submit">Post</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="card">
+                        {% for post in posts %}
+                        <div class="post">
+                            <div class="post-header">
+                                <div class="post-user-avatar">
+                                    {% if post.user.profile_picture %}
+                                        <img src="{{ post.user.profile_picture.url }}" alt="{{ post.user.get_full_name }}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                                    {% else %}
+                                        {{ post.user.first_name.0|upper }}{{ post.user.last_name.0|upper }}
+                                    {% endif %}
+                                </div>
+                                <div class="post-user-info">
+                                    <h4>{{ post.user.get_full_name|default:post.user.username }}</h4>
+                                    <p>{{ post.created_at|timesince }} ago</p>
+                                </div>
+                            </div>
+                            <p class="post-content">{{ post.content }}</p>
+                            <div class="post-interactions">
+                                <button class="interaction-btn">
+                                    👍 {{ post.likes_count }}
+                                </button>
+                                <button class="interaction-btn">💬 {{ post.comments_count }}</button>
+                                <button class="interaction-btn">🔗 Share</button>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="post">
+                            <p class="post-content" style="text-align: center; color: #6b7280;">No posts yet. Be the first to share something!</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div id="content-events" class="tab-content hidden">
+                    <div class="card">
+                        <h2 class="section-title" style="font-size: 1.25rem;">Upcoming Events</h2>
+                        <div class="event-grid">
+                            {% for event in events %}
+                            <div class="event-card">
+                                <div class="event-header">
+                                    <div class="event-indicator" style="background-color: #3b82f6;"></div>
+                                    <h3 class="event-title">{{ event.title }}</h3>
+                                </div>
+                                <p class="event-date">{{ event.start_date|date:"M d, Y" }}{% if event.end_date != event.start_date %} • {{ event.end_date|date:"M d, Y" }}{% endif %}</p>
+                                <p class="event-description">{{ event.description }}</p>
+                                {% if event.location %}
+                                <p class="event-location">📍 {{ event.location }}</p>
+                                {% endif %}
+                            </div>
+                            {% empty %}
+                            <div class="event-card">
+                                <div class="event-header">
+                                    <div class="event-indicator" style="background-color: #6b7280;"></div>
+                                    <h3 class="event-title">No upcoming events</h3>
+                                </div>
+                                <p class="event-description">Check back later for new events and announcements.</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <!-- Product Content -->
+                <div id="content-product" class="tab-content hidden" >
+                    
+                    <div class="card">
+                        
+                        <h2 class="section-title" style="font-size: 1.25rem;">Product Catalog</h2>
+                        <div class="product-grid">
+                            {% for product in products %} 
+                                <div class="product-card">
+                                    <div class="product-image">
+                                        {% if product.image %}  
+                                            <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 0.5rem;">
+                                        {% else %}
+                                            📦
+                                        {% endif %}
+                                    </div>
+                                    <h3 class="product-name">{{ product.name }}</h3> 
+                                    <p class="product-description">{{ product.description }}</p>  
+                                    <div class="product-footer">
+                                        <span class="product-price">${{ product.price }}</span>  |
+                                        <span class="product-category">{{ product.category }}</span>
+
+                                    </div>
+                                    <button class="btn btn-primary" style="
+                                            margin-top: 0.5rem; 
+                                            color: white;
+                                            background-color: red;
+                                            border: none;
+                                            padding: 0.5rem 1rem;
+                                            border-radius: 0.25rem;
+                                            font-weight: bold;
+                                            cursor: pointer;
+                                            transition: background-color 0.3s ease;
+                                        " action="/create-checkout-session" method="POST">Buy Now</button>
+                                </div>
+                            {% endfor %}  
+                        </div>
+                    </div>
+                </div>
+            <div class="right-sidebar">
+                <div class="card">
+                    <h3 class="section-title">Quick Stats</h3>
+                    <div class="stats-space">
+                        <div class="stats-item">
+                            <span class="stats-label">Active Members</span>
+                            <span class="stats-value">{{ stats.active_members|default:124 }}</span>
+                        </div>
+                        <div class="stats-item">
+                            <span class="stats-label">Posts Today</span>
+                            <span class="stats-value">{{ stats.posts_today|default:18 }}</span>
+                        </div>
+                        <div class="stats-item">
+                            <span class="stats-label">Upcoming Events</span>
+                            <span class="stats-value">{{ stats.upcoming_events|default:4 }}</span>
+                        </div>
+                        <div class="stats-item">
+                            <span class="stats-label">New Members</span>
+                            <span class="stats-value">{{ stats.new_members|default:7 }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let activeTab = 'feed';
+
+        function setActiveTab(tab) {
+            // Hide all content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+
+            // Remove active state from all nav buttons
+            document.querySelectorAll('.nav-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected content
+            document.getElementById(`content-${tab}`).classList.remove('hidden');
+
+            // Set active nav button
+            const activeBtn = document.getElementById(`nav-${tab}`);
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+            }
+
+            activeTab = tab;
+        }
+
+    </script>
+</body>
+</html>
