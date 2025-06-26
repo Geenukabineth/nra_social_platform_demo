@@ -1,17 +1,45 @@
 from django.db import models
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+
+from django.utils import timezone
 
 
+class UserManager(BaseUserManager):
+    def create_user(self, username, email, password=None, **extra_fields):
+        if not username:
+            raise ValueError("The Username must be set")
+        if not email:
+            raise ValueError("The Email must be set")
+        email = self.normalize_email(email)
+        user = self.model(username=username, email=email, **extra_fields)
+        user.set_password(password)
+        user.save()
+        return user
 
-class User(models.Model):
+    def create_superuser(self, username, email, password=None, **extra_fields):
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
+        return self.create_user(username, email, password, **extra_fields)
+
+
+class User(AbstractBaseUser, PermissionsMixin):
+    first_name = models.CharField(max_length=100, blank=True)
+    last_name = models.CharField(max_length=100, blank=True)
     username = models.CharField(max_length=100, unique=True)
     email = models.EmailField(max_length=100, unique=True)
-    password = models.CharField(max_length=128) 
     is_active = models.BooleanField(default=True)
-    agreed_to_terms = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
+    date_joined = models.DateTimeField(default=timezone.now)
+
+    objects = UserManager()
+
+    USERNAME_FIELD = "username"
+    REQUIRED_FIELDS = ["email"]  
 
     def __str__(self):
         return self.username
-    
+
 
 class Product(models.Model):
     Category = (
@@ -21,8 +49,6 @@ class Product(models.Model):
         ('Books', 'Books'),
         ('Sports', 'Sports'),
     )
-
-
     name = models.CharField(max_length=200, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     category = models.CharField(max_length=50, choices=Category, blank=True)
@@ -69,7 +95,3 @@ class Event(models.Model):
         self.end_date = end_date
         self.location = location
         self.save()    
-    
-
-
-
